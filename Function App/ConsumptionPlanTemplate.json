@@ -1,0 +1,141 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "String"
+    },
+    "storageName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "appinsName":{
+       "type": "String"
+    },
+	"storageType":{
+       "type": "String"
+    },
+	"storageKind":{
+       "type": "String"
+    },
+	"storageAccessTier":{
+       "type": "String"
+    },
+    "httpsTrafficOnlyEnabled": {
+      "type": "Bool"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "tags": {},
+      "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "[resourceId('microsoft.insights/components/',parameters('appinsName'))]",
+				"[resourceId('microsoft.insights/components/',parameters('storageName'))]"
+            ],
+	  "variables": {
+	  "accountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"}
+      "type": "Microsoft.Web/sites",
+      "properties": {
+        "name": "[parameters('name')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "httpsOnly": "[parameters('httpsTrafficOnlyEnabled')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageName'), ';AccountKey=', variables('accountKey'))]"
+			},
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~2"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "6.5.0"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appinsName')), '2014-04-01').InstrumentationKey]"
+            }
+          ]
+        },
+        "clientAffinityEnabled": false
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "kind": "functionapp"
+    },
+    {
+        "type": "microsoft.insights/components",
+        "apiVersion": "2015-05-01",
+        "name": "[parameters('appinsName')]",
+        "location": "eastus",
+        "tags": {},
+        "properties": {
+            "ApplicationId": "[parameters('name')]",
+            "Request_Source": "IbizaWebAppExtensionCreate"
+        }
+    },
+    {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2016-09-01",
+            "name": "[parameters('hostingPlanName')]",
+            "location": "East US",
+            "tags": {},
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1",
+                "family": "Y",
+                "capacity": 0
+            },
+            "kind": "functionapp",
+            "properties": {
+                "name": "[parameters('hostingPlanName')]",
+                "perSiteScaling": false,
+                "reserved": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+    },
+	{
+    "type": "Microsoft.Storage/storageAccounts",
+	"sku": {
+		"name": "[parameters('storageType')]"
+    },
+    "name": "[parameters('storageName')]",
+    "apiVersion": "2019-04-01",
+    "location": "[resourceGroup().location]",
+    "kind": "[parameters('storageKind')]",
+    "properties": {
+        "supportsHttpsTrafficOnly": "[parameters('httpsTrafficOnlyEnabled')]",
+        "accessTier": "[parameters('storageAccessTier')]",
+        "encryption": {
+            "services": {
+                "blob": {
+                    "enabled": true
+                }
+             },
+            "keySource": "Microsoft.Storage"
+        }
+    }
+}
+    ],
+  "outputs": {
+    "principalid": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2018-11-01', 'Full').identity.principalId]"
+    }
+  }
+}

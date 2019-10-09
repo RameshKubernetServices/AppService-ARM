@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "d-func-cam-001"
+        },
+        "hostingPlanName": {
+            "value": "d-appservplan-consumption-001-cam"
+        },
+        "storageName": {
+            "value": "dstor005cam"
+        },
+        "location": {
+            "value": "East US"
+        },
+        "appinsName":{
+            "value": "d-appins-001-cam"
+        },
+		"storageType":{
+			"value": "Standard_ZRS"
+		},
+		"storageKind":{
+			"value": "StorageV2"
+		},
+		"storageAccessTier":{
+			"value": "Cool"
+		},
+		"httpsTrafficOnlyEnabled": {
+			"Value": "True"
+		}
+    }
+}
