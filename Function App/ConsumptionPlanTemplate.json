@@ -42,7 +42,8 @@
 				"[resourceId('microsoft.insights/components/',parameters('storageName'))]"
             ],
 	  "variables": {
-	  "accountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"}
+	  "accountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+	  }
       "type": "Microsoft.Web/sites",
       "properties": {
         "name": "[parameters('name')]",
@@ -54,7 +55,6 @@
               "name": "AzureWebJobsStorage",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageName'), ';AccountKey=', variables('accountKey'))]"
 			},
-            },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
               "value": "~2"
