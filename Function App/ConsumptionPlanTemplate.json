@@ -51,7 +51,7 @@
             ],
       "type": "Microsoft.Web/sites",
       "properties": {
-        "name": "[parameters('name')]",
+        "name": "[parameters('functionName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "httpsOnly": "[parameters('httpsTrafficOnlyEnabled')]",
         "siteConfig": {
@@ -88,7 +88,7 @@
         "location": "[parameters('location')]",
         "tags": {},
         "properties": {
-            "ApplicationId": "[parameters('name')]",
+            "ApplicationId": "[parameters('functionName')]",
             "Request_Source": "IbizaWebAppExtensionCreate"
         }
     },
