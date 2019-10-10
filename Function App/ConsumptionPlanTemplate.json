@@ -140,7 +140,7 @@
   "outputs": {
     "principalid": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2018-11-01', 'Full').identity.principalId]"
+      "value": "[reference(concat('Microsoft.Web/sites/', parameters('functionName')), '2018-11-01', 'Full').identity.principalId]"
     }
   }
 }
