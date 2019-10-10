@@ -30,6 +30,14 @@
       "type": "Bool"
     }
   },
+  "variables": {
+			    "storageAccount": {
+                    "name": "[parameters('storageName')]",
+                    "resourceId": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', parameters('storageName'))]",
+                    "location": "[parameters('storageLocation')]",
+                    "type": "[parameters('storageType')]"
+                    }
+  },
   "resources": [
     {
       "apiVersion": "2018-11-01",
@@ -39,11 +47,8 @@
       "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
                 "[resourceId('microsoft.insights/components/',parameters('appinsName'))]",
-				"[resourceId('microsoft.insights/components/',parameters('storageName'))]"
+				"[resourceId('Microsoft.Storage/storageAccounts/',parameters('storageName'))]"
             ],
-	  "variables": {
-			"accountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
-	  },
       "type": "Microsoft.Web/sites",
       "properties": {
         "name": "[parameters('name')]",
@@ -53,8 +58,8 @@
           "appSettings": [
             {
               "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageName'), ';AccountKey=', variables('accountKey'))]"
-			},
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccount').name, ';AccountKey=', listKeys(variables('storageAccount').resourceId,'2015-05-01-preview').key1)]"
+            },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
               "value": "~2"
@@ -80,7 +85,7 @@
         "type": "microsoft.insights/components",
         "apiVersion": "2015-05-01",
         "name": "[parameters('appinsName')]",
-        "location": "eastus",
+        "location": "[parameters('location')]",
         "tags": {},
         "properties": {
             "ApplicationId": "[parameters('name')]",
@@ -91,7 +96,7 @@
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2016-09-01",
             "name": "[parameters('hostingPlanName')]",
-            "location": "East US",
+            "location": "[parameters('location')]",
             "tags": {},
             "sku": {
                 "name": "Y1",
@@ -116,7 +121,7 @@
     },
     "name": "[parameters('storageName')]",
     "apiVersion": "2019-04-01",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('location')]",
     "kind": "[parameters('storageKind')]",
     "properties": {
         "supportsHttpsTrafficOnly": "[parameters('httpsTrafficOnlyEnabled')]",
