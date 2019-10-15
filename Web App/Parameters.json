@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
-            "type": "String"
+            "value": "web-001"
         },
         "hostingPlanName": {
-            "type": "String"
+            "value": "appservplan-001"
         },
         "location": {
-            "type": "String"
+            "value": "East US"
         },
         "appinsName":{
-            "type": "String"
+            "value": "appins-001"
         }
     }
 }
