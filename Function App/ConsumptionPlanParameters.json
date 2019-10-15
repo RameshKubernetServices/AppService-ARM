@@ -3,19 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "functionName": {
-            "value": "d-func-cam-001"
+            "value": "d-func-001"
         },
         "hostingPlanName": {
-            "value": "d-appservplan-consumption-001-cam"
+            "value": "appservplan-consumption-001"
         },
         "storageName": {
-            "value": "dstor005cam"
+            "value": "stor001"
         },
         "location": {
             "value": "East US"
         },
         "appinsName":{
-            "value": "d-appins-001-cam"
+            "value": "appins-001"
         },
 		"storageType":{
 			"value": "Standard_ZRS"

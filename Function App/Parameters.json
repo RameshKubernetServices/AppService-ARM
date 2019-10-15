@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "functionName": {
+            "value": "func-003"
+        },
+        "hostingPlanName": {
+            "value": "appservplan-001"
+        },
+        "storageName": {
+            "value": "stor002"
+        },
+        "location": {
+            "value": "East US"
+        },
+        "appinsName":{
+            "value": "appins-001"
+        },
+		"storageType":{
+			"value": "Standard_ZRS"
+		},
+		"storageKind":{
+			"value": "StorageV2"
+		},
+		"storageAccessTier":{
+			"value": "Cool"
+		},
+		"httpsTrafficOnlyEnabled": {
+			"value": "True"
+		}
+    }
+}
